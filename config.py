@@ -7,8 +7,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_api_key() -> str:
-
     # Reads and returns the Gemini API key from the environment.
+    
     api_key: str = os.getenv("GEMINI_API_KEY", "")
 
     if not api_key:
