@@ -4,3 +4,12 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+from gemini import GeminiClient
+
+ai = GeminiClient()
+
+pmt = input("Enter your prompt: ")
+res = ai.generate_response(pmt)
+
+print(res)
