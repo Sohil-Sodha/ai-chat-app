@@ -12,7 +12,7 @@ class GeminiClient:
 
         # Configure the SDK with the API key from config.py
         genai.configure(api_key=GEMINI_API_KEY)
-        self._model = genai.GenerativeModel(model_name="gemini-1.5-flash")
+        self._model = genai.GenerativeModel(model_name="gemini-2.5-flash")
 
     def generate_response(self, prompt: str) -> str:
 
