@@ -14,14 +14,14 @@ class GeminiClient:
         genai.configure(api_key=GEMINI_API_KEY)
         self._model = genai.GenerativeModel(model_name="gemini-2.5-flash")
 
-    def generate_response(self, prompt: str) -> str:
+    def generate_response(self, history: list[dict]) -> str:
 
-        if not prompt.strip():
-            raise ValueError("Prompt must not be empty.")
+        if not history:
+            raise ValueError("Conversation history must not be empty.")
         
         try:
-            response = self._model.generate_content(prompt)
+            response = self._model.generate_content(history)
             return response.text
         
         except GoogleAPIError as e:
-            raise RuntimeError(f"Gemini API Error: {e}") from e
+            raise RuntimeError(f"Gemini API error: {e}") from e
