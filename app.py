@@ -4,16 +4,14 @@ Handles the CLI loop and wires all components together.
 """
 
 from chat import ChatService
+from utils import print_banner, formate_ai_response, print_goodbye
 
 def main() -> None:
     # Starts the chat application and runs the interactive CLI loop.
 
     chat_service = ChatService()
 
-    print("=" * 40)
-    print("  Welcome to AI Chat App!")
-    print("  Type 'exit' or 'quit' to leave.")
-    print("=" * 40)
+    print_banner()
 
     while True:
         try:
@@ -25,15 +23,15 @@ def main() -> None:
 
             # Exit cleanly on known quit commands
             if user_input.lower() in {"exit", "quit"}:
-                print("Goodbye! 👋")
+                print_goodbye()
                 break
 
             response = chat_service.chat(user_input)
-            print(f"\nAI: {response}")
+            print(formate_ai_response(response))
 
         except KeyboardInterrupt:
             # Handle Ctrl+C gracefully without a traceback
-            print("\nGoodbye! 👋")
+            print_goodbye()
             break
 
         except Exception as e:
