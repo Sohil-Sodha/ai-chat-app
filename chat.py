@@ -63,12 +63,18 @@ class ChatService:
         # Record the user's message before sending
         self._session.add_user_message(user_message)
 
-        # Build the full payload: system prompt + conversation history
-        payload = self._build_payload()
+        # If generate_response raises, the user message is already stored.
+        # Clear it to avoid a broken turn in the history.
 
-        # Pass the full history so Gemini has context for its reply
-        response = self._client.generate_response(payload)
-
+        try:
+            payload = self._build_payload()
+            response = self._client.generate_response(payload)
+        
+        except Exception:
+            # Roll back the user message so history stays consistent
+            self._session.get_history().pop()
+            raise
+        
         # Record the model's reply to keep the history complete
         self._session.add_model_response(response)
 

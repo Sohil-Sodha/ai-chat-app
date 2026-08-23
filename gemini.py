@@ -1,7 +1,7 @@
 # gemini.py — Service layer for interacting with the Gemini API.
 
 import google.generativeai as genai
-from google.api_core.exceptions import GoogleAPIError
+from google.api_core.exceptions import GoogleAPIError, Unauthenticated, ServiceUnavailable
 
 from config import GEMINI_API_KEY
 
@@ -22,6 +22,20 @@ class GeminiClient:
         try:
             response = self._model.generate_content(history)
             return response.text
+        
+        except Unauthenticated as e:
+            # Raised when the API key is missing, revoked, or malformed
+            raise PermissionError(
+                "Invalid or missing API key. "
+                "Check that GEMINI_API_KEY is set correctly in your .env file."
+            ) from e
+        
+        except ServiceUnavailable as e:
+            # Raised when the Gemini service cannot be reached
+            raise ConnectionError(
+                "Could not reach the Gemini API. "
+                "Check your internet connection and try again."
+            ) from e
         
         except GoogleAPIError as e:
             raise RuntimeError(f"Gemini API error: {e}") from e
