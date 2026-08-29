@@ -134,7 +134,7 @@ Goodbye! Thanks for chatting. 👋
 Listed in `requirements.txt`:
 
 ```
-google-generativeai
+google-genai
 python-dotenv
 ```
 
