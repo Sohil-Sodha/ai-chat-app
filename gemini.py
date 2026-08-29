@@ -1,41 +1,54 @@
 # gemini.py — Service layer for interacting with the Gemini API.
 
-import google.generativeai as genai
-from google.api_core.exceptions import GoogleAPIError, Unauthenticated, ServiceUnavailable
+from google import genai
 
 from config import GEMINI_API_KEY
 
 class GeminiClient:
-    # Handles all communication with the Gemini API.
+    """Handles all communication with the Gemini API."""
+
+    MODEL_NAME = "gemini-2.5-flash"
 
     def __init__(self) -> None:
+        if not GEMINI_API_KEY:
+            raise ValueError(
+                "GEMINI_API_KEY is missing. "
+                "Set it in your .env file or environment variables."
+            )
 
-        # Configure the SDK with the API key from config.py
-        genai.configure(api_key=GEMINI_API_KEY)
-        self._model = genai.GenerativeModel(model_name="gemini-2.5-flash")
+        self._client = genai.Client(api_key=GEMINI_API_KEY)
 
     def generate_response(self, history: list[dict]) -> str:
+        """
+        Generate a response from Gemini using conversation history.
+
+        Expected history format:
+        [
+            {"role": "user", "parts": [{"text": "Hello"}]},
+            {"role": "model", "parts": [{"text": "Hi! How can I help?"}]},
+            {"role": "user", "parts": [{"text": "Tell me a joke."}]},
+        ]
+        """
 
         if not history:
             raise ValueError("Conversation history must not be empty.")
-        
+
         try:
-            response = self._model.generate_content(history)
+            response = self._client.models.generate_content(
+                model=self.MODEL_NAME,
+                contents=history,
+            )
+
+            if not response.text:
+                raise RuntimeError(
+                    "Gemini returned an empty response."
+                )
+
             return response.text
-        
-        except Unauthenticated as e:
-            # Raised when the API key is missing, revoked, or malformed
-            raise PermissionError(
-                "Invalid or missing API key. "
-                "Check that GEMINI_API_KEY is set correctly in your .env file."
+
+        except Exception as e:
+            # Keep API-specific errors from leaking into the rest
+            # of the application.
+            raise RuntimeError(
+                f"Gemini API error: {e}"
             ) from e
-        
-        except ServiceUnavailable as e:
-            # Raised when the Gemini service cannot be reached
-            raise ConnectionError(
-                "Could not reach the Gemini API. "
-                "Check your internet connection and try again."
-            ) from e
-        
-        except GoogleAPIError as e:
-            raise RuntimeError(f"Gemini API error: {e}") from e
