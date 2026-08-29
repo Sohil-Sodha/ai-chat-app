@@ -2,12 +2,13 @@
 
 def print_banner() -> None:
     # Prints the welcome banner at application startup.
-
+    
+    print("\n")
     print("=" * 40)
     print("        Welcome to AI Chat App!")
     print("   Type 'exit' or 'quit' to leave.")
     print("=" * 40)
-
+    
 def formate_ai_response(text: str) -> str:
     
     separator = "-" * 40
