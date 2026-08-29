@@ -42,7 +42,7 @@ ai-chat-app/
 |-----------------|-----------------------------------|
 | Language        | Python 3.10+                      |
 | AI Model        | Google Gemini 2.5 Flash           |
-| AI SDK          | `google-generativeai`             |
+| AI SDK          | `google-genai`             |
 | Config Loading  | `python-dotenv`                   |
 | Interface       | CLI (built-in `input` / `print`)  |
 
