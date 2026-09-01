@@ -165,12 +165,3 @@ Data flows in one direction:
 app.py → ChatService → GeminiClient → Gemini API
 <<<<<<< HEAD
 ```
-
----
-
-## License
-
-This project is intended for learning purposes and is not licensed for production use.
-=======
-```
->>>>>>> 3c026ce (Last commit)
