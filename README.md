@@ -163,5 +163,4 @@ Data flows in one direction:
 
 ```
 app.py → ChatService → GeminiClient → Gemini API
-<<<<<<< HEAD
 ```
